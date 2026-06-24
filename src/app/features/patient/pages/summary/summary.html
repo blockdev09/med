@@ -1,0 +1,65 @@
+<div class="summary-page">
+
+  <div class="page-header">
+    <a routerLink="/patient/appointments" class="back-btn">← Back</a>
+    <h2>Visit Summary</h2>
+  </div>
+
+  @if (isLoading()) {
+    <div class="state-box">
+      <p>Loading summary...</p>
+    </div>
+  }
+
+  @if (isError()) {
+    <div class="state-box error">
+      <p>Could not load summary.</p>
+    </div>
+  }
+
+  @if (!isLoading() && !isError() && appointment()) {
+    <div class="summary-content">
+
+      <div class="summary-card">
+        <h3>Appointment Details</h3>
+        <div class="detail-row">
+          <span class="label">Reason</span>
+          <span class="value">{{ appointment()?.reason }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Date</span>
+          <span class="value">{{ appointment()?.scheduledFor | date: 'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Doctor</span>
+          <span class="value">{{ appointment()?.clinician?.name }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="status">
+            {{ appointment()?.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>Clinical Notes</h3>
+
+        @if (notes().length === 0) {
+          <p class="no-notes">No notes available yet.</p>
+        }
+
+        @for (note of notes(); track note.id) {
+          <div class="note-item">
+            <p class="note-content">{{ note.content }}</p>
+            <p class="note-meta">
+              {{ note.clinicianName }} · {{ note.createdAt | date: 'dd MMM yyyy, hh:mm a' }}
+            </p>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+</div>

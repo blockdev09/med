@@ -1,0 +1,91 @@
+<div class="appointments-page">
+
+  <div class="page-header">
+    <h2>All Appointments</h2>
+    <span class="count">{{ appointments().length }} total</span>
+  </div>
+
+    @if (isLoading()) {
+  <app-state-ui type="loading" message="Loading your appointments..." />
+}
+
+  @if (isError()) {
+  <app-state-ui
+    type="error"
+    message="We could not load your appointments."
+    actionLabel="Retry"
+    (actionClick)="loadAppointments()"
+  />
+}
+
+  @if (!isLoading() && !isError() && appointments().length === 0) {
+  <app-state-ui
+    type="empty"
+    message="No appointments yet. Book your first one!"
+    actionLabel="+ Book Appointment"
+    (actionClick)="toggleForm()"
+  />
+
+  @if (!isLoading() && !isError() && appointments().length > 0) {
+    <div class="appointments-list">
+      @for (appointment of appointments(); track appointment.id) {
+        <div
+          class="appointment-card"
+          [class.selected]="selectedAppointment()?.id === appointment.id"
+          (click)="selectAppointment(appointment)"
+        >
+          <div class="card-main">
+            <div class="card-left">
+              <p class="patient-name">{{ appointment.patient?.name }}</p>
+              <p class="reason">{{ appointment.reason }}</p>
+              <p class="date">{{ appointment.scheduledFor | date: 'dd MMM yyyy, hh:mm a' }}</p>
+              <p class="doctor">{{ appointment.clinician?.name }}</p>
+            </div>
+            <div class="card-right">
+              <span class="status {{ appointment.status.toLowerCase() }}">
+                {{ appointment.status }}
+              </span>
+              @if (appointment.intake) {
+                <span class="intake-badge">Intake done</span>
+              }
+            </div>
+          </div>
+
+          @if (selectedAppointment()?.id === appointment.id) {
+            <div class="intake-details">
+              <h4>Intake Details</h4>
+              @if (!appointment.intake) {
+                <p class="no-intake">Patient has not completed intake yet.</p>
+              } @else {
+                <div class="intake-row">
+                  <span class="label">Intake Status</span>
+                  <span class="value">{{ appointment.intake.status }}</span>
+                </div>
+                @if (appointment.intake.symptoms) {
+                  <div class="intake-row">
+                    <span class="label">Symptoms</span>
+                    <span class="value">{{ appointment.intake.symptoms }}</span>
+                  </div>
+                }
+                @if (appointment.intake.allergies) {
+                  <div class="intake-row">
+                    <span class="label">Allergies</span>
+                    <span class="value">{{ appointment.intake.allergies }}</span>
+                  </div>
+                }
+                @if (appointment.intake.currentMedications) {
+                  <div class="intake-row">
+                    <span class="label">Medications</span>
+                    <span class="value">{{ appointment.intake.currentMedications }}</span>
+                  </div>
+                }
+              }
+            </div>
+          }
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

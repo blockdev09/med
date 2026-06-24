@@ -1,0 +1,60 @@
+<div class="queue-page">
+
+  <div class="page-header">
+    <h2>Queue Status</h2>
+    <button class="refresh-btn" (click)="loadQueue()">Refresh</button>
+  </div>
+
+   @if (isLoading()) {
+  <app-state-ui type="loading" message="Loading your appointments..." />
+}
+
+  @if (isError()) {
+  <app-state-ui
+    type="error"
+    message="We could not load your appointments."
+    actionLabel="Retry"
+    (actionClick)="loadAppointments()"
+  />
+}
+
+  @if (!isLoading() && !isError() && appointments().length === 0) {
+  <app-state-ui
+    type="empty"
+    message="No appointments yet. Book your first one!"
+    actionLabel="+ Book Appointment"
+    (actionClick)="toggleForm()"
+  />
+  @if (!isLoading() && !isError() && queue().length > 0) {
+
+    @if (myPosition()) {
+      <div class="my-position">
+        <p class="position-label">Your position in queue</p>
+        <span class="position-number">{{ myPosition() }}</span>
+        <p class="position-sub">out of {{ queue().length }} patients</p>
+      </div>
+    }
+
+    <div class="queue-list">
+      @for (item of queue(); track item.appointmentId) {
+        <div class="queue-card" [class.mine]="item.patientId === currentUser.id">
+          <div class="queue-left">
+            <span class="queue-number">{{ $index + 1 }}</span>
+          </div>
+          <div class="queue-info">
+            <p class="queue-reason">{{ item.reason }}</p>
+            <p class="queue-time">Checked in at {{ item.checkedInAt | date: 'hh:mm a' }}</p>
+          </div>
+          <div class="queue-right">
+            <span class="status {{ item.status.toLowerCase() }}">{{ item.status }}</span>
+            @if (item.patientId === currentUser.id) {
+              <span class="you-badge">You</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+  }
+
+</div>

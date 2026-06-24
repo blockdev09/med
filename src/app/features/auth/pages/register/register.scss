@@ -1,0 +1,62 @@
+@use 'functions' as *;
+@import '_fonts';
+.register-container {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  .main {
+    display: grid;
+    grid-template-columns: 7fr 3fr;
+    .register-section {
+      border-left: thin solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      font-family: 'Inter', sans-serif;
+      .register-card {
+        background-color: white;
+        padding: 1.5rem;
+        width: toRem(350);
+        border-radius: toRem(12);
+        border: thin solid #ccc;
+        box-shadow: 0px toRem(2) toRem(8) 0px rgba(99, 99, 99, 0.2);
+        form {
+          display: flex;
+          flex-direction: column;
+          // gap: 1.25rem;
+          input {
+            padding: 1rem;
+            border-radius: toRem(12);
+            border: thin solid #ccc;
+          }
+          input:focus,
+          input:active {
+            outline: none;
+            border-color: #2563eb;
+          }
+          button {
+            margin-top: 0.75rem;
+            padding: 1rem;
+            border: none;
+            background-color: #2563eb;
+            color: white;
+            font-weight: 450;
+            font-size: 1.25em;
+            border-radius: toRem(12);
+            cursor: pointer;
+            &:hover {
+              background-color: #235bd3;
+            }
+          }
+          .error-list {
+            margin: 0.5rem;
+            color: red;
+            font-size: 0.75em;
+          }
+        }
+      }
+    }
+  }
+}

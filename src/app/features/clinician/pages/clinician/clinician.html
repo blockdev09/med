@@ -1,0 +1,46 @@
+<div class="clinician-shell">
+
+  <aside class="sidebar" [class.collapsed]="!isSidebarOpen()">
+
+    <div class="sidebar-header">
+      @if (isSidebarOpen()) {
+        <span class="logo">Threshold</span>
+      }
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        {{ isSidebarOpen() ? '←' : '→' }}
+      </button>
+    </div>
+
+    @if (isSidebarOpen()) {
+      <div class="user-info">
+        <div class="avatar">{{ user.name?.charAt(0) }}</div>
+        <div>
+          <p class="user-name">{{ user.name }}</p>
+          <p class="user-role">Clinician</p>
+        </div>
+      </div>
+    }
+
+    <nav class="nav">
+      <a routerLink="/clinician/queue" routerLinkActive="active" class="nav-item">
+        @if (isSidebarOpen()) { My Queue }
+      </a>
+    </nav>
+
+    <button class="logout-btn" (click)="logout()">
+      @if (isSidebarOpen()) { Logout } @else { × }
+    </button>
+
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <h1 class="page-title">Clinician Portal</h1>
+      <span class="welcome">Welcome, Dr. {{ user.name }}</span>
+    </header>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+</div>

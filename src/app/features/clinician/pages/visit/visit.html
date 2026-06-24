@@ -1,0 +1,103 @@
+<div class="visit-page">
+
+  <div class="page-header">
+    <button class="back-btn" (click)="router.navigate(['/clinician/queue'])">← Back</button>
+    <h2>Visit</h2>
+  </div>
+
+    @if (isLoading()) {
+  <app-state-ui type="loading" message="Loading your appointments..." />
+}
+
+  @if (isError()) {
+  <app-state-ui
+    type="error"
+    message="We could not load your appointments."
+    actionLabel="Retry"
+    (actionClick)="loadAppointments()"
+  />
+}
+
+
+  @if (!isLoading() && !isError() && appointment()) {
+    <div class="visit-content">
+
+      <div class="visit-card">
+        <h3>Patient Details</h3>
+        <div class="detail-row">
+          <span class="label">Patient</span>
+          <span class="value">{{ appointment()!.patient?.name }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Reason</span>
+          <span class="value">{{ appointment()!.reason }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Scheduled</span>
+          <span class="value">
+            {{ appointment()!.scheduledFor | date: 'dd MMM yyyy, hh:mm a' }}
+          </span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Status</span>
+          <span class="status {{ appointment()!.status.toLowerCase() }}">
+            {{ appointment()!.status }}
+          </span>
+        </div>
+      </div>
+
+      @if (appointment()!.intake) {
+        <div class="visit-card">
+          <h3>Intake Information</h3>
+          @if (appointment()!.intake!.symptoms) {
+            <div class="detail-row">
+              <span class="label">Symptoms</span>
+              <span class="value">{{ appointment()!.intake!.symptoms }}</span>
+            </div>
+          }
+          @if (appointment()!.intake!.allergies) {
+            <div class="detail-row">
+              <span class="label">Allergies</span>
+              <span class="value">{{ appointment()!.intake!.allergies }}</span>
+            </div>
+          }
+          @if (appointment()!.intake!.currentMedications) {
+            <div class="detail-row">
+              <span class="label">Medications</span>
+              <span class="value">{{ appointment()!.intake!.currentMedications }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="visit-card">
+        <h3>Clinical Notes</h3>
+        @if (notes().length === 0) {
+          <p class="no-notes">No notes yet.</p>
+        }
+        @for (note of notes(); track note.id) {
+          <div class="note-item">
+            <p class="note-content">{{ note.content }}</p>
+            <p class="note-meta">
+              {{ note.clinicianName }} · {{ note.createdAt | date: 'dd MMM yyyy, hh:mm a' }}
+            </p>
+          </div>
+        }
+      </div>
+
+      @if (appointment()!.status === 'IN_VISIT') {
+        <div class="visit-actions">
+          <button
+            class="complete-btn"
+            (click)="onCompleteVisit()"
+            [disabled]="isCompleting()"
+          >
+            {{ isCompleting() ? 'Completing...' : 'Complete Visit' }}
+          </button>
+        </div>
+      }
+
+    </div>
+  }
+
+</div>

@@ -1,0 +1,162 @@
+.queue-page {
+  max-width: 800px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a2e;
+  }
+
+  .refresh-btn {
+    background: none;
+    border: 1px solid #7c83fd;
+    color: #7c83fd;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+
+    &:hover {
+      background: #7c83fd;
+      color: #fff;
+    }
+  }
+}
+
+.state-box {
+  padding: 40px;
+  text-align: center;
+  background: #fff;
+  border-radius: 10px;
+  color: #666;
+
+  &.error {
+    color: #e74c3c;
+
+    button {
+      margin-top: 12px;
+      padding: 8px 16px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  }
+}
+
+.my-position {
+  background: #7c83fd;
+  color: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 24px;
+
+  .position-label {
+    margin: 0 0 8px;
+    font-size: 14px;
+    opacity: 0.85;
+  }
+
+  .position-number {
+    font-size: 56px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .position-sub {
+    margin: 8px 0 0;
+    font-size: 13px;
+    opacity: 0.75;
+  }
+}
+
+.queue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.queue-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #eee;
+
+  &.mine {
+    border-color: #7c83fd;
+    background: #f5f6ff;
+  }
+
+  .queue-left {
+    .queue-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #444;
+    }
+  }
+
+  .queue-info {
+    flex: 1;
+
+    .queue-reason {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin: 0 0 4px;
+    }
+
+    .queue-time {
+      font-size: 13px;
+      color: #888;
+      margin: 0;
+    }
+  }
+
+  .queue-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+
+    .you-badge {
+      background: #7c83fd;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+  }
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.checked_in { background: #e8f8f0; color: #27ae60; }
+  &.called { background: #fef9e7; color: #f39c12; }
+  &.in_visit { background: #f0e8fd; color: #8e44ad; }
+}

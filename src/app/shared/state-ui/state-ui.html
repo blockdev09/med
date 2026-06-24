@@ -1,0 +1,25 @@
+<div class="state-ui" [class]="type()">
+
+  @if (type() === 'loading') {
+    <div class="spinner"></div>
+    <p class="state-msg">{{ message() || 'Loading...' }}</p>
+  }
+
+  @if (type() === 'error') {
+    <div class="state-icon error-icon">!</div>
+    <p class="state-title">Something went wrong</p>
+    <p class="state-msg">{{ message() || 'Could not load data. Please try again.' }}</p>
+    @if (actionLabel()) {
+      <button class="state-btn error-btn" (click)="onAction()">{{ actionLabel() }}</button>
+    }
+  }
+
+  @if (type() === 'empty') {
+    <div class="state-icon empty-icon">○</div>
+    <p class="state-title">{{ message() || 'Nothing here yet' }}</p>
+    @if (actionLabel()) {
+      <button class="state-btn empty-btn" (click)="onAction()">{{ actionLabel() }}</button>
+    }
+  }
+
+</div>

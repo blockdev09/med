@@ -1,0 +1,147 @@
+<div class="appointments-page">
+
+  <div class="page-header">
+    <h2>My Appointments</h2>
+    <button class="book-btn" (click)="toggleForm()">
+      {{ showForm() ? 'Cancel' : '+ Book Appointment' }}
+    </button>
+  </div>
+
+  @if (showForm()) {
+    <div class="book-form">
+      <h3>New Appointment</h3>
+      <label>
+        Date & Time
+        <input type="datetime-local" [formField]="bookForm.scheduledFor" />
+      </label>
+      <label>
+        Reason for visit
+        <input type="text" placeholder="e.g. Routine checkup" [formField]="bookForm.reason" />
+      </label>
+      <label>
+        Doctor
+        <input type="text" value="Dr. Morgan" disabled />
+      </label>
+      <button class="submit-btn" (click)="onBook()" [disabled]="isBooking()">
+        {{ isBooking() ? 'Booking...' : 'Confirm Booking' }}
+      </button>
+    </div>
+  }
+
+  @if (isLoading()) {
+  <app-state-ui type="loading" message="Loading your appointments..." />
+}
+
+  @if (isError()) {
+  <app-state-ui
+    type="error"
+    message="We could not load your appointments."
+    actionLabel="Retry"
+    (actionClick)="loadAppointments()"
+  />
+}
+
+  @if (!isLoading() && !isError() && appointments().length === 0) {
+  <app-state-ui
+    type="empty"
+    message="No appointments yet. Book your first one!"
+    actionLabel="+ Book Appointment"
+    (actionClick)="toggleForm()"
+  />
+}   
+
+  @if (!isLoading() && !isError() && appointments().length > 0) {
+    <div class="appointments-list">
+      @for (appointment of appointments(); track appointment.id) {
+        <div class="appointment-card">
+
+          <div class="card-top">
+            <div class="card-left">
+              <p class="reason">{{ appointment.reason }}</p>
+              <p class="date">{{ appointment.scheduledFor | date: 'dd MMM yyyy, hh:mm a' }}</p>
+              <p class="doctor">{{ appointment.clinician?.name }}</p>
+            </div>
+            <div class="card-right">
+              <span class="status {{ appointment.status.toLowerCase() }}">
+                {{ appointment.status }}
+              </span>
+            </div>
+          </div>
+
+          @if (showRescheduleFor() === appointment.id) {
+            <div class="reschedule-form">
+              <label>
+                New Date & Time
+                <input
+                  type="datetime-local"
+                  [value]="newScheduledFor()"
+                  (change)="newScheduledFor.set($any($event.target).value)"
+                />
+              </label>
+              <div class="reschedule-actions">
+                <button
+                  class="confirm-btn"
+                  (click)="onReschedule(appointment.id)"
+                  [disabled]="reschedulingId() === appointment.id"
+                >
+                  {{ reschedulingId() === appointment.id ? 'Rescheduling...' : 'Confirm' }}
+                </button>
+                <button class="cancel-inline-btn" (click)="toggleReschedule(appointment.id)">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          }
+
+          <div class="card-actions">
+            @if (appointment.status === 'BOOKED') {
+              <button
+                class="checkin-btn"
+                (click)="onCheckIn(appointment.id)"
+                [disabled]="checkingInId() === appointment.id"
+              >
+                {{ checkingInId() === appointment.id ? 'Checking in...' : 'Check In' }}
+              </button>
+
+              <button
+                class="reschedule-btn"
+                (click)="toggleReschedule(appointment.id)"
+              >
+                Reschedule
+              </button>
+
+              <button
+                class="cancel-btn"
+                (click)="onCancel(appointment.id)"
+                [disabled]="cancellingId() === appointment.id"
+              >
+                {{ cancellingId() === appointment.id ? 'Cancelling...' : 'Cancel' }}
+              </button>
+            }
+
+            @if (appointment.status === 'CHECKED_IN') {
+              <p class="checked-in-msg">You are checked in. Please wait to be called.</p>
+            }
+
+            @if (appointment.status === 'CALLED') {
+              <div class="called-badge">
+                Your doctor is ready — please come in!
+              </div>
+            }
+
+            @if (appointment.status === 'COMPLETED') {
+              
+                class="summary-btn"
+                [routerLink]="['/patient/summary', appointment.id]"
+              >
+                View Summary
+              </a>
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

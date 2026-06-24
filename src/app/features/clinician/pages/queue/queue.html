@@ -1,0 +1,85 @@
+<div class="queue-page">
+
+  <div class="page-header">
+    <h2>My Queue</h2>
+    <button class="refresh-btn" (click)="loadQueue()">Refresh</button>
+  </div>
+
+   @if (isLoading()) {
+  <app-state-ui type="loading" message="Loading your appointments..." />
+}
+
+  @if (isError()) {
+  <app-state-ui
+    type="error"
+    message="We could not load your appointments."
+    actionLabel="Retry"
+    (actionClick)="loadAppointments()"
+  />
+}
+
+  @if (!isLoading() && !isError() && appointments().length === 0) {
+  <app-state-ui
+    type="empty"
+    message="No appointments yet. Book your first one!"
+    actionLabel="+ Book Appointment"
+    (actionClick)="toggleForm()"
+  />
+
+  @if (!isLoading() && !isError() && queue().length > 0) {
+    <div class="queue-list">
+      @for (item of queue(); track item.appointmentId) {
+        <div class="queue-card">
+
+          <div class="queue-position">{{ $index + 1 }}</div>
+
+          <div class="queue-info">
+            <p class="patient-name">{{ item.patient?.name }}</p>
+            <p class="reason">{{ item.reason }}</p>
+            <p class="checkin-time">
+              Checked in at {{ item.checkedInAt | date: 'hh:mm a' }}
+            </p>
+          </div>
+
+          <div class="queue-actions">
+            <span class="status {{ item.status.toLowerCase() }}">
+              {{ item.status }}
+            </span>
+
+            @if (item.status === 'CHECKED_IN') {
+              <button
+                class="action-btn call"
+                (click)="onCallPatient(item.appointmentId)"
+                [disabled]="callingId() === item.appointmentId"
+              >
+                {{ callingId() === item.appointmentId ? 'Calling...' : 'Call Patient' }}
+              </button>
+            }
+
+            @if (item.status === 'CALLED') {
+              <button
+                class="action-btn start"
+                (click)="onStartVisit(item.appointmentId)"
+                [disabled]="startingId() === item.appointmentId"
+              >
+                {{ startingId() === item.appointmentId ? 'Starting...' : 'Start Visit' }}
+              </button>
+            }
+
+            @if (item.status === 'IN_VISIT') {
+              <button
+                class="action-btn resume"
+                (click)="router.navigate(['/clinician/visit', item.appointmentId])"
+              >
+                Resume Visit
+              </button>
+            }
+
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>

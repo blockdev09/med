@@ -1,0 +1,79 @@
+<div class="queue-page">
+
+  <div class="page-header">
+    <h2>Live Queue</h2>
+    <button class="refresh-btn" (click)="loadQueue()">Refresh</button>
+  </div>
+
+    @if (isLoading()) {
+  <app-state-ui type="loading" message="Loading your appointments..." />
+}
+
+  @if (isError()) {
+  <app-state-ui
+    type="error"
+    message="We could not load your appointments."
+    actionLabel="Retry"
+    (actionClick)="loadAppointments()"
+  />
+}
+
+  @if (!isLoading() && !isError() && appointments().length === 0) {
+  <app-state-ui
+    type="empty"
+    message="No appointments yet. Book your first one!"
+    actionLabel="+ Book Appointment"
+    (actionClick)="toggleForm()"
+  />
+
+  @if (!isLoading() && !isError() && queue().length > 0) {
+    <div class="queue-stats">
+      <div class="stat">
+        <span class="stat-number">{{ queue().length }}</span>
+        <span class="stat-label">Total in queue</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">
+          {{ queue().filter(q => q.status === 'CHECKED_IN').length }}
+        </span>
+        <span class="stat-label">Waiting</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">
+          {{ queue().filter(q => q.status === 'IN_VISIT').length }}
+        </span>
+        <span class="stat-label">In visit</span>
+      </div>
+    </div>
+
+    <div class="queue-list">
+      @for (item of queue(); track item.appointmentId) {
+        <div class="queue-card">
+          <div class="queue-position">{{ $index + 1 }}</div>
+          <div class="queue-info">
+            <p class="patient-name">{{ item.patient?.name }}</p>
+            <p class="reason">{{ item.reason }}</p>
+            <p class="checkin-time">
+              Checked in at {{ item.checkedInAt | date: 'hh:mm a' }}
+            </p>
+          </div>
+          <div class="queue-right">
+            <span class="status {{ item.status.toLowerCase() }}">
+              {{ item.status }}
+            </span>
+            @if (item.status === 'BOOKED') {
+              <button
+                class="checkin-btn"
+                (click)="onCheckIn(item.appointmentId)"
+                [disabled]="checkingInId() === item.appointmentId"
+              >
+                {{ checkingInId() === item.appointmentId ? 'Checking in...' : 'Check In' }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+</div>

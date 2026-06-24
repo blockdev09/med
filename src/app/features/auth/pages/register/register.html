@@ -1,0 +1,54 @@
+<div class="register-container">
+  <app-landing-header></app-landing-header>
+  <main class="main">
+    <app-landing-main></app-landing-main>
+    <section class="register-section">
+      <div class="register-card">
+        <form (submit)="onSubmit($event)">
+          <label>
+            Email :
+            <input type="email" placeholder="Enter your email" [formField]="registerForm.email" />
+          </label>
+          @let email = registerForm.email();
+          @if (email.touched()) {
+            <ul class="error-list">
+              @for (error of email.errors(); track error) {
+                <p>{{ error.message }}</p>
+              }
+            </ul>
+          }
+          <label>
+            Password :
+            <input
+              type="password"
+              placeholder="Enter your password"
+              [formField]="registerForm.password"
+            />
+          </label>
+          @let password = registerForm.password();
+          @if (password.touched()) {
+            <ul class="error-list">
+              @for (error of password.errors(); track error) {
+                <p>{{ error.message }}</p>
+              }
+            </ul>
+          }
+          <label>
+            Name :
+            <input type="text" placeholder="Enter your name..." [formField]="registerForm.name" />
+          </label>
+          @let name = registerForm.name();
+          @if (name.touched()) {
+            <ul class="error-list">
+              @for (error of name.errors(); track error) {
+                <p>{{ error.message }}</p>
+              }
+            </ul>
+          }
+          <button type="submit">Register</button>
+        </form>
+        <p class="login-btn">Already have an account? <a routerLink="/login">Login</a></p>
+      </div>
+    </section>
+  </main>
+</div>
