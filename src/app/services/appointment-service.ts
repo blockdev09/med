@@ -28,26 +28,31 @@ export class AppointmentService {
     // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/reschedule`, { scheduledFor });
   }
   getQueue() {
-  // return this.http.get<IQueueItem[]>(`${this.baseUrl}/queue`);
-}
-getNotes(id: string) {
-  // return this.http.get<INote[]>(`${this.baseUrl}/appointments/${id}/notes`);
-}
-checkIn(id: string) {
-  // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/check-in`, {});
-}
-callPatient(id: string) {
-  // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/call`, {});
-}
+    // return this.http.get<IQueueItem[]>(`${this.baseUrl}/queue`);
+  }
+  getNotes(id: string) {
+    // return this.http.get<INote[]>(`${this.baseUrl}/appointments/${id}/notes`);
+  }
+  checkIn(id: string) {
+    // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/check-in`, {});
+  }
+  callPatient(id: string) {
+    // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/call`, {});
+  }
 
-startVisit(id: string) {
-  // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/start`, {});
-}
-completeVisit(id: string) {
-  // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/complete`, {});
-}
+  startVisit(id: string) {
+    // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/start`, {});
+  }
+  completeVisit(id: string) {
+    // return this.http.post<IAppointment>(`${this.baseUrl}/appointments/${id}/complete`, {});
+  }
 
-addNote(id: string, content: string) {
-  // return this.http.post<INote>(`${this.baseUrl}/appointments/${id}/notes`, { content });
-}
+  addNote(id: string, content: string) {
+    // return this.http.post<INote>(`${this.baseUrl}/appointments/${id}/notes`, { content });
+  }
+  uploadDocument(id: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.baseUrl}/appointments/${id}/documents`, formData);
+  }
 }
